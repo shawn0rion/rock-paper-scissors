@@ -5,6 +5,10 @@ function getComputerChoice() {
 }
 
 function playRound(e) {
+    if (playerTracker.textContent == 3 || computerTracker.textContent == 3){
+        return;
+    }
+
     let debug = false;
     let playerSelection = e.target.innerText;
     let computerSelection = getComputerChoice();;
@@ -12,12 +16,6 @@ function playRound(e) {
     let playerWins = roundWinner(playerSelection, computerSelection);
     let computerWins = roundWinner(computerSelection, playerSelection);
 
-    if (debug == true){
-        console.log(playerSelection)
-        console.log(computerSelection)
-        console.log(playerWins)
-        console.log(computerWins)    
-    }
     if (playerWins){
         textDisplay.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
         incTracker(playerTracker);
@@ -30,7 +28,14 @@ function playRound(e) {
         textDisplay.textContent = `It's a tie.`;
     }
     // if either tracker value is 3 , declare winner. then prompt to play again
-    // if play again is true, set both tracker's textContent to 0.
+    if (playerTracker.textContent == 3 || computerTracker.textContent == 3){
+        newGame.classList.add('show');
+        newGame.addEventListener('click', () => {
+            playerTracker.textContent = 0;
+            computerTracker.textContent = 0;
+            newGame.classList.remove('show');
+        });
+    }
 }
 
 function roundWinner(a, b) {
@@ -48,13 +53,15 @@ function incTracker(tracker) {
     let number = parseInt(text, 10);
     tracker.value = number + 1;
     tracker.textContent = tracker.value;
-    
-
 }
 
 const div = document.querySelector('.container');
 const buttons = document.createElement('div')
 buttons.classList.add('row');
+
+const newGame = document.createElement('button');
+newGame.classList.add('newGame');
+newGame.textContent = "Play Again?";
 
 const rockBtn = document.createElement('button');
 const paperBtn = document.createElement('button');
@@ -81,6 +88,7 @@ rockBtn.addEventListener('click', playRound);
 paperBtn.addEventListener('click', playRound);
 scissorsBtn.addEventListener('click', playRound);
 
+div.appendChild(newGame);
 display.appendChild(playerTracker);
 display.appendChild(textDisplay);
 display.appendChild(computerTracker);
