@@ -4,9 +4,10 @@ function getComputerChoice() {
     return options[rndInt];
 }
 
-function playRound(computerSelection, playerSelection) {
+function playRound(e) {
     let debug = false;
-    playerSelection = playerSelection[0].toUpperCase() + playerSelection.slice(1).toLowerCase();
+    let playerSelection = e.target.innerText;
+    let computerSelection = getComputerChoice();;
 
     let playerWins = roundWinner(playerSelection, computerSelection);
     let computerWins = roundWinner(computerSelection, playerSelection);
@@ -18,14 +19,18 @@ function playRound(computerSelection, playerSelection) {
         console.log(computerWins)    
     }
     if (playerWins){
-        return `You win! ${playerSelection} beats ${computerSelection}`;
+        textDisplay.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
+        incTracker(playerTracker);
     }
     if (computerWins){
-        return `You lose! ${computerSelection} beats ${playerSelection}`;
+        textDisplay.textContent = `You lose! ${computerSelection} beats ${playerSelection}`;
+        incTracker(computerTracker);
     }
     if (!(playerWins || computerWins)){
-        return "This round is a tie.";
+        textDisplay.textContent = `It's a tie.`;
     }
+    // if either tracker value is 3 , declare winner. then prompt to play again
+    // if play again is true, set both tracker's textContent to 0.
 }
 
 function roundWinner(a, b) {
@@ -38,29 +43,74 @@ function roundWinner(a, b) {
     }
 }
 
-function game() {
-    playerWins = 0;
-    computerWins = 0;
-    for (i = 0; i < 5; i++){
-        let thisRound = playRound(getComputerChoice(), playerSelection);
-        console.log(thisRound);
-        if (thisRound.includes("win")){
-            playerWins += 1;
-        }
-        if (thisRound.includes("lose")){
-            computerWins += 1;
-        }
-    }
-    if (playerWins > computerWins){
-        return "You've won!";
-    } else if (computerWins > playerWins){
-        return "You've lost!";
-    } else{
-        return "The game is a tie.";
-    }
+function incTracker(tracker) {
+    let text = tracker.textContent;
+    let number = parseInt(text, 10);
+    tracker.value = number + 1;
+    tracker.textContent = tracker.value;
+    
+
 }
 
+const div = document.querySelector('.container');
+const buttons = document.createElement('div')
+buttons.classList.add('row');
+
+const rockBtn = document.createElement('button');
+const paperBtn = document.createElement('button');
+const scissorsBtn = document.createElement('button');
+
+rockBtn.textContent = "Rock";
+paperBtn.textContent = "Paper";
+scissorsBtn.textContent = "Scissors";
+
+const display = document.createElement('div');
+const playerTracker = document.createElement('div');
+const textDisplay = document.createElement('div');
+const computerTracker = document.createElement('div');
+playerTracker.textContent = 0;
+computerTracker.textContent = 0;
+
+display.classList.add('display');
+playerTracker.classList.add('tracker');
+textDisplay.classList.add('write');
+computerTracker.classList.add('tracker');
 
 
-let playerSelection = "scissors"
-console.log(game())
+rockBtn.addEventListener('click', playRound);
+paperBtn.addEventListener('click', playRound);
+scissorsBtn.addEventListener('click', playRound);
+
+display.appendChild(playerTracker);
+display.appendChild(textDisplay);
+display.appendChild(computerTracker);
+div.appendChild(display);
+buttons.appendChild(rockBtn);
+buttons.appendChild(paperBtn);
+buttons.appendChild(scissorsBtn);
+div.appendChild(buttons);
+
+
+// function game() {
+//     playerWins = 0;
+//     computerWins = 0;
+//     for (i = 0; i < 5; i++){
+//         let thisRound = playRound(getComputerChoice(), playerSelection);
+//         console.log(thisRound);
+//         if (thisRound.includes("win")){
+//             playerWins += 1;
+//         }
+//         if (thisRound.includes("lose")){
+//             computerWins += 1;
+//         }
+//     }
+//     if (playerWins > computerWins){
+//         return "You've won!";
+//     } else if (computerWins > playerWins){
+//         return "You've lost!";
+//     } else{
+//         return "The game is a tie.";
+//     }
+// }
+
+// console.log(game())
